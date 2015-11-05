@@ -1,0 +1,98 @@
+%\usepackage{bm}
+\chapter{Literature Review}
+
+
+
+Recent advancements made in computer vision and machine learning literature have facilitated the development of semantic understanding techniques [9]. Robotics has benefited from the application such contributions to concepts including Visual SLAM [7],[topological and semantic SLAM], active navigation [10, 18], object recognition [13,14,15,16], and manipulation [3,6]. Semantic understanding has also been successfully applied to robots assisting humans in daily activites [5,15]. 
+
+Of particular interest to us is recent work involving active searches for objects [1,2,3]. Anand et. al. [1] employed probabilistic heat maps of potential object locations, based on a graphical model of the scene constructed from visual and geometric features of co-occurring objects. While Koppula et. al. [5] exploited object affordances to anticipate human activities, the contextually guided search in [1] did not make use of affordances. It may also be noted that the robot navigation used was directly guided by the probabilistic heat map of a single object. 
+
+Aydemir et. al. [2] defines an active visual search for robots to locate objects in both known and unknown environments. While the authors' robot is capable of exploring the scene, its knowledge is in the form of the environment map, and a position of the object, rather than higher level notions of affordances and associated actions. The authors also provide a comparison of the robots performance against a human in a similar setting, although they do not leverage the implicit understanding gained by the human to guide the robot. 
+
+In [3], Wong et. al. integrate robotic manipulation with active perception, by manipulating objects in the scene to achieve a better view of the surrounding scene. The authors' work focuses on target objects that are potentially occluded inside `containers' of given sizes. By manipulating extraneous objects in the vicinity, they demonstrate a planner on a simulated PR2 robot, that explores containers to locate the target object. 
+
+A common trend in recent advancements involves enabling robots to implicitly understand the environments they perceive, and go about tasks armed with this understanding, in much the same way humans do. We note that a largely unused resource in this regard comes in the form of human demonstration and understanding. An intuitive method to infuse robots with this implicit understanding of the scene is to provide the robots with access to a demonstration by a human executing a task in a similar environment.
+
+Learning from demonstration (LfD) techniques have explored the concept of a robot imitating motion from a human expert. While LfD techniques have been successfully applied to a variety of robotic tasks, such as aerial manoeuvres for UAVs [R1], manipulation of typical objects [R2,R6,R8], such approaches are based on kinematic or geometric features inherent to the robot or its surrounding environment. Work tying learning from demonstration to semantic understanding is relatively nascent [10]. We propose a system which incorporates expert demonstrations to help a robot learn the implicit rewards associated with exploring a scene. More details are provided in section 3. 
+
+Recent work in LfD [R1,R2,R3] is closely tied to inverse reinforcement learning [R4]. Such approaches utilize the demonstrations provided by an expert user to estimate an unknown reward function. The majority of these techniques do so by maximizing the margin between the expected reward obtained by expert policy and the current robot policy. These approaches thus attempt to bound the sub-optimality of a robot policy, by iteratively updating the reward function till convergence.
+%A majority of the current approaches in apprenticeship learning utilize inverse reinforcement learning techniques. 
+
+%It may be noted that this method is limited in the following capacity. 
+%By iteratively solving an MDP with an updated estimate of the rewards, the authors do not provide a guarantee on whether the output policy provides a greater expected reward than the existing policies previously considered. For an initial sub-optimal policy, margin maximization between the expert and the current policy provides no new information, and solving the MDP with the resultant rewards is unnecessary. Furthermore, in order to evaluate the expected reward for the expert policy, access to the entire expert policy is assumed. In an actual setting of apprenticeship learning, we note that such access is not guaranteed; rather, the user provides an expert policy for a subset of the states present. \\
+
+In this paper, we propose a robotic system that understands object-object and object-concept relationships in the scene. %The robot form
+%\section{Section-1 Name}
+
+%Some text here ...
+
+%\begin{definition}\label{abc1}
+%Some definition....
+%\end{definition}
+
+%\begin{theorem}
+%Some theorem.......
+%\end{theorem}
+
+%\begin{proof}
+%Proof is as follows....
+%\end{proof}
+
+
+%\begin{corollary}
+%A corollary to the theorem is....
+%\end{corollary}
+
+%\begin{remark}
+%Some remark.......
+%\end{remark}
+
+
+%You may have to type many equations inside the text.  The equation can be typed as below.
+%\begin{equation}\label{eqn1}
+%f(x) = \frac{x^2-5x+2}{e^x - 2} = {y^5-3 \over e^x-2} %\nonumber
+%\end{equation}
+
+%This can be referred as (\ref{eqn1}) and so on.....
+
+%You may have to type a set of equations.  For this you may proceed as given below.
+%\begin{eqnarray}
+%f(x) &=& e^{1+2(x-a)} + \ldots   \nonumber   \\
+%  &=& \log(x+a) + \sin(x+y) + \cdots  \label{eqn2}
+%\end{eqnarray}
+
+% Note: \nonumber will suppress the eqn number in the above.
+% You can type comments like this starting with % as here.
+
+%You may have to cite the articles.  You may do so as \cite{golub} and so on.....
+%Note that you have already created the `bib.bib' file and included the entry with the above %name. Only
+%then you can cite it as above.
+
+%\section{Section-2 Name}
+%\begin{definition}\label{abc2}
+%Some definition....
+%\end{definition}
+
+%\begin{remark}
+%Some remark.......
+%\end{remark}
+
+%\subsection{Subsection name}
+
+%\begin{theorem}
+%Some theorem.......
+%\end{theorem}
+
+%\begin{proof}
+%Proof is as follows.... By Definition \ref{abc1}
+%\end{proof}
+
+
+\begin{figure}[hH]
+
+[The figure will be displayed here.]
+
+\caption{The correlation coefficient as a function of $\rho$}
+\end{figure}
+
+

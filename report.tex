@@ -1,0 +1,203 @@
+\documentclass[12pt,a4paper]{report}
+
+\usepackage{amsthm,amssymb,mathrsfs,setspace}%amsmath, latexsym,footmisc
+\usepackage{amsmath}
+\usepackage{layout}
+%\usepackage[a4paper, margin=1in]{geometry}
+\usepackage{bm}
+\usepackage{mathtools}
+
+\usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+% \usepackage{pstcol}
+% \usepackage{play}
+\usepackage{epsfig}
+\usepackage{bm}
+%\usepackage{layout}
+%\usepackage[grey,times]{quotchap}
+\usepackage[nottoc]{tocbibind}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
+%
+
+%\input xy
+%\xyoption{all}
+
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{notation}[theorem]{Notation}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\renewcommand{\baselinestretch}{1.5}
+
+
+
+
+\begin{document}
+%\layout
+%\pagenumbering{arabic} \setcounter{page}{1}
+
+% --------------- Title page -----------------------
+
+%\begin{titlepage}
+%\input{title/title}
+%\end{titlepage}
+%\cleardoublepage
+
+
+%____________________________________________________
+%\begin{titlepage}
+%\enlargethispage{3cm}
+%\begin{center}
+
+%\vspace*{-2cm}
+
+%\textbf{\Large SEMANTIC CONTEXT BASED ACTIVE ROBOT EXPLORATION}
+
+%\vfill
+
+% A Project Report Submitted \\
+%for the Course \\[1cm]
+
+%{\bf\Large\ ME498 Project ~I }\\[.1in]
+
+% \vfill
+
+%{\large \emph{by}}\\[5pt]
+%{\large\bf {TANMAY SHANKAR}}\\[5pt]
+%{\large (Roll No. 120103086)}
+
+%\vfill
+%\includegraphics[height=2.5cm]{iitglogo}
+
+%\vspace*{0.5cm}
+
+%{\em\large to the}\\[10pt]
+%{\bf\large DEPARTMENT OF MECHANICAL ENGINEERING} 
+%\\[5pt]
+%{\bf\large \mbox{INDIAN INSTITUTE OF TECHNOLOGY GUWAHATI}}\\[5pt]
+%{\bf\large GUWAHATI - 781039, INDIA}\\[10pt]
+%{\it\large November 2015}
+%\end{center}
+
+%\end{titlepage}
+
+%\clearpage
+
+% --------------- Certificate page -----------------------
+%\pagenumbering{roman} \setcounter{page}{2}
+%\begin{center}
+%{\Large{\bf{CERTIFICATE}}}
+%\end{center}
+%%\thispagestyle{empty}
+%
+%
+%\noindent
+%This is to certify that the work contained in this project report
+%entitled ``{\bf Semantic Context based Active Robot Exploration}" submitted
+%by {\bf Tanmay Shankar} ({\bf Roll No.: 120103086}) has been carried out by him under our supervision.
+%\vspace{4cm}
+%
+%\noindent Guwahati - 781 039 \hfill (Dr. XYZ)
+%
+%\noindent November 2013 \hfill Project Supervisor
+%
+%\clearpage
+%
+
+% --------------- Declaration page -----------------------
+%\pagenumbering{roman} \setcounter{page}{2}
+%\begin{center}
+%{\Large{\bf{DECLARATION}}}
+%\end{center}
+%%\thispagestyle{empty}
+%
+%
+%\noindent
+%I declare that this written submission represents our ideas in our own words
+%and where others' ideas or words have been included, I have adequately cited
+%and referenced the original sources. I also declare that I have adhered to all
+%principles of academic honesty and integrity and have not misrepresented or
+%fabricated or falsified any idea/data/fact/source in our submission. I
+%understand that any violation of the above will be cause for disciplinary action
+%by the Institute and can also evoke penal action from the sources which have
+%thus not been properly cited or from whom proper permission has not been
+%taken when needed.
+%\vspace{4cm}
+%
+%\noindent Guwahati - 781 039 \hfill (Tanmay Shankar)
+%
+%\noindent November 2015 \hfill 120103086
+%
+%\hspace*{\fill} Date: \hspace*{1in}
+%
+%\clearpage
+
+
+% --------------- Acknowledgement page -----------------------
+%\pagenumbering{roman} \setcounter{page}{2}
+%\begin{center}
+%{\Large{\bf{ACKNOWLEDGEMENT}}}
+%\end{center}
+%%\thispagestyle{empty}
+%
+%
+%\noindent
+%
+%\vspace{4cm}
+%
+%
+%\clearpage
+
+
+% --------------- Abstract page -----------------------
+%\begin{center}
+%{\Large{\bf{ABSTRACT}}}
+%\end{center}
+%
+%
+%The main aim of the project ........
+%
+%\clearpage
+%
+%\tableofcontents
+%\clearpage
+%\listoffigures
+%\listoftables
+%
+%
+%\newpage
+%
+%\pagenumbering{arabic}
+%\setcounter{page}{1}
+
+% =========== Main chapters starts here. Type in separate files and include the filename here. ==
+% ============================
+
+\input chapter1.tex
+
+\input chapter2.tex
+
+\input chapter3.tex
+
+\input chapter4.tex
+
+
+\nocite{golub} \nocite{gerla}\nocite{m1}\nocite{chang}
+
+\bibliographystyle{plain}
+\bibliography{bib.bib}
+
+\end{document}
+

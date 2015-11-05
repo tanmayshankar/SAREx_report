@@ -1,0 +1,169 @@
+\chapter*{Appendix A} \label{appendix}
+{\huge{\textbf{Effect of Various Terms in the }}}
+\vspace{3mm}
+{\huge{\textbf{Damage Growth Law}}}
+\vspace{-1cm}\section*{}
+The first term of equation~(\ref{eq:chap2:damage_growth_law_shankar_dhar_law}) represents the void nucleation model of Gurland~\cite{Gurland_1972} while the other two terms represent the void growth.
+Further, the term corresponding to $a_{2}$ represents the non-linearity in the
+ variation of area void fraction with strain as observed in the experimental results of
+ Le Roy \emph{et al.}~\cite{Leroy_1981}. In the damage growth law of Lemaitre~\cite{Lemaitre_1985},
+ the term corresponding to $c_{d}$ and $a_{2}$ are not considered.
+
+\section*{A.1 Effects of Terms Containing $c_{d}$ and $a_{2}$}
+ To study the effect of these two terms in the damage growth law (equation~\ref{eq:chap2:damage_growth_law_shankar_dhar_law}), the
+ following three models are fitted through the experimental results of Le Roy \emph{et al.}~\cite{Leroy_1981}:
+ \begin{eqnarray}
+ \label{eq:chap8:diff_damage_growth_law}
+ \mbox{Model (I)}:\;\; _{t}\Delta D\,&=&\,a_{1}(-^{t}Y)\,_{t}\Delta\epsilon^{pL}_{eq} \label{eq:chap8:damage_law_1} \\
+ \mbox{Model (II)}:\;\;_{t}\Delta D\,&=&\,(a_{1}\,+\,a_{2}\,^{t}\!D)(-^{t}Y)\,_{t}\Delta\epsilon^{pL}_{eq} \label{eq:chap8:damage_law_2} \\
+ \mbox{Model (III)}:\;\;_{t}\Delta D\,&=&\,c_{d} \,_{t}\Delta\epsilon^{pL}_{eq}\,+\,a_{1}\,(-^{t}Y)\,_{t}\Delta\epsilon^{pL}_{eq} \label{eq:chap8:damage_law_3}
+ \end{eqnarray}
+The values of the coefficients for each of the three models and for both AISI1090 and AISI1045 steels
+are given in Tables~\ref{tab:chap8:coeff_value_diff_damage_laws_1090} and \ref{tab:chap8:coeff_value_diff_damage_laws_1045}. Tensile tests are simulated using
+these three models for both cylindrical and pre-notched specimens.
+\begin{table}[h]
+\caption{Coefficient values for three models (AISI1090 steel)}
+\begin{center}
+\begin{tabular}{| c | c | c | c | }
+\hline           Model & $c_{d}$  & $a_{1}$     & $a_{2}$   \\
+                       &      &(MPa$^{-1}$) & (MPa$^{-1}$) \\
+\hline
+  I & $\times$ & $5.75\times10^{-02}$ & $\times$  \\
+\hline
+ II & $\times$ & $9.30\times10^{-03}$ & 2.44 \\
+\hline
+III & $8.00\times10^{-03}$ & $3.24\times10^{-02}$ & $\times$  \\
+\hline
+\end{tabular}
+\end{center}
+\label{tab:chap8:coeff_value_diff_damage_laws_1090}
+\end{table}
+\begin{table}[h]
+\caption{Coefficient values for three models (AISI1045 steel)}
+\begin{center}
+\begin{tabular}{| c | c | c | c | }
+\hline           Model & $c_{d}$  & $a_{1}$     & $a_{2}$   \\
+                       &      &(MPa$^{-1}$) & (MPa$^{-1}$) \\
+\hline
+  I & $\times$ & $6.56\times10^{-02}$ & $\times$ \\
+\hline
+ II & $\times$ & $1.15\times10^{-02}$ & 1.90  \\
+\hline
+III &  $1.50\times10^{-03}$ & $2.53\times10^{-02}$ & $\times$ \\
+\hline
+\end{tabular}
+\end{center}
+\label{tab:chap8:coeff_value_diff_damage_laws_1045}
+\end{table}
+\subsubsection*{A.1.1 Cylindrical Rod}
+Figure~(\ref{fig:chap8:damage_growth_cylinder_center_diff_coefficients}) shows the simulated damage growth at the
+center of the cylindrical specimen for both the steels. When the damage growth is modeled using only the $a_{1}$ term (model I),
+it does not simulate the highly non-linear experimental behaviour observed after necking. When
+the term corresponding to $c_{d}$ is added (model III), then also the non-linear exponential trend
+is not simulated. However, instead of the $c_{d}$ term, if the $a_{2}$ term is added (model II),
+then the non-linearity in the experimental damage growth is captured well. Thus, the $a_{2}$
+term is essential to model the non-linear damage growth in AISI1045 and AISI1090 steels. On the other
+hand, the void nucleation term $c_{d}$ does not seem to have much effect on the subsequent damage
+growth in these steels. The models I and III over-predict the damage in the initial stages, the
+over-prediction being less in model III. Further, the damage reaches the critical value only
+in the model II for AISI1090 steel and in none of the models for AISI1045 steel. The damage
+growth at the outer surface follows the similar trend as at the centre. Hence those results
+are not represented graphically.
+\begin{figure}[ht]
+\centering
+\subfigure[AISI1090]{\includegraphics[width=.50\textheight]{Figures/chapter8/effect_of_extra_terms/cylindrical_specimen/damage_growth_at_center_1090_effect_of_coefficients_cylinder.eps}
+\label{fig:chap8:damage_growth_cylinder_center_diff_coefficients_aisi1090}} \\
+\subfigure[AISI1045]{\includegraphics[width=.50\textheight]{Figures/chapter8/effect_of_extra_terms/cylindrical_specimen/damage_growth_at_center_1045_effect_of_coefficients_cylinder.eps}
+\label{fig:chap8:damage_growth_cylinder_center_diff_coefficients_aisi1045}}
+\caption{Comparison of damage growth curves at the center of cylindrical specimen for AISI1090 and AISI1045 steels} \label{fig:chap8:damage_growth_cylinder_center_diff_coefficients}
+\end{figure}
+
+Figure~(\ref{fig:chap8:equipstrain_vs_triaxiality_1087}) shows the variation of triaxiality with equivalent plastic strain for two steels at the center of cylindrical specimen. It is seen that, in the initial stage, the triaxiality is $1/3$ for all the models. However after the necking, for AISI1090 steel, the triaxiality rises very quickly for model II while it rises only slightly for the models I and III. This low value
+of triaxiality for models I and III explains why the damage does not reach the critical value. For AISI1045 steel, for
+all the models, the triaxiality does not rise as high as when all the three terms are included. This explains
+ why the damage does not reach the critical value for all the three models for AISI1045 steel. At the outer surface, there
+is hardly any change in the variation of triaxiality when either the $c_{d}$ term or the $a_{2}$ term or both the terms are
+dropped.
+\begin{figure}[htb]
+\centering \subfigure[AISI1090]{\includegraphics[width=.50\textheight]{Figures/chapter8/effect_of_extra_terms/cylindrical_specimen/equipstrain_vs_triaxiality_1087_1090_cylinder.eps}
+\label{fig:chap8:equipstrain_vs_triaxiality_1087_1090_cylinder}} \\
+\subfigure[AISI1045]{\includegraphics[width=.50\textheight]{Figures/chapter8/effect_of_extra_terms/cylindrical_specimen/equipstrain_vs_triaxiality_1087_1045_cylinder.eps}
+ \label{fig:chap8:equipstrain_vs_triaxiality_1087_1045_cylinder}}
+\caption{Comparison of triaxiality versus equivalent plastic strain curves for both the steels at the center of cylindrical specimen} \label{fig:chap8:equipstrain_vs_triaxiality_1087}
+\end{figure}
+
+Figure~(\ref{fig:chap8:triaxiality_damage_1087}) shows the damage versus triaxiality curves for both the steel at the center of the cylindrical specimen.  It is clear that the damage rises with triaxiality in all the models. However, only for the model II, the damage reaches the critical level in AISI1090 steel. In the case of AISI1045 steel, the damage does not reach the critical level for any of the models. Similar trend
+is observed at the outer surface.
+\begin{figure}[htb]
+\centering \subfigure[AISI1090]{\includegraphics[width=.50\textheight]{Figures/chapter8/effect_of_extra_terms/cylindrical_specimen/triaxiality_vs_damage_1087_1090_cylinder.eps}
+\label{fig:chap8:triaxiality_vs_damage_1087_1090_cylinder}} \\
+\subfigure[AISI1045]{\includegraphics[width=.50\textheight]{Figures/chapter8/effect_of_extra_terms/cylindrical_specimen/triaxiality_vs_damage_1087_1045_cylinder.eps}
+\label{fig:chap8:triaxiality_vs_damage_1087_1045_cylinder}}
+\caption{Comparison of damage versus triaxiality curves for both the steels at the center of cylindrical specimen} \label{fig:chap8:triaxiality_damage_1087}
+\end{figure}
+
+Figure~(\ref{fig:chap8:load_disp_plot_cylinder_diff_coefficients}) shows the comparison of the load displacement curves for the two steels. The necking and the sudden drop is exhibited by all the three models. However, the necking is observed at smaller displacement for the model I. This is expected since, in the initial stages, the model I exhibits faster damage growth.
+\begin{figure}[ht]
+\centering
+\subfigure[AISI1090]{\includegraphics[width=.50\textheight]{Figures/chapter8/effect_of_extra_terms/cylindrical_specimen/Load_disp_node_plot_1090_diff_terms_cylinder.eps}
+\label{fig:chap8:load_disp_plot_cylinder_diff_coefficients_1090}} \\ %\subfigtopskip \subfigbottomskip
+\subfigure[AISI1045]{\includegraphics[width=.50\textheight]{Figures/chapter8/effect_of_extra_terms/cylindrical_specimen/Load_disp_node_plot_1045_diff_terms_cylinder.eps}
+ \label{fig:chap8:load_disp_plot_cylinder_diff_coefficients_1045}}
+\caption{Comparison of load displacement curves for AISI1090 and AISI1045 steels in cylindrical specimens}
+\label{fig:chap8:load_disp_plot_cylinder_diff_coefficients}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Prenecked Specimen %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection*{A.1.2 Pre-notched Specimen}
+Figure~(\ref{fig:chap8:damage_growth_prenecked_center_diff_coefficients}) shows the simulated damage growth at the center of the pre-notched specimen for the two steels. As in the case of cylindrical specimen, it is
+observed that the damage growth exhibits highly non-linear trend only for the model II. The results at the outer surface follow the similar trend.
+\begin{figure}[ht]
+\centering
+\subfigure[AISI1090]{\includegraphics[width=.50\textheight]{Figures/chapter8/effect_of_extra_terms/prenecked_specimen/damage_growth_at_center_1090_effect_of_coefficients_prenecked.eps}
+\label{fig:chap8:damage_growth_prenecked_center_diff_coefficients_aisi1090}} \\ %
+\subfigure[AISI1045]{\includegraphics[width=.50\textheight]{Figures/chapter8/effect_of_extra_terms/prenecked_specimen/damage_growth_at_center_1045_effect_of_coefficients_prenecked.eps}
+\label{fig:chap8:damage_growth_prenecked_center_diff_coefficients_aisi1045}}
+\caption{Comparison of damage growth curves at the center of pre-notched specimen for AISI1090 and AISI1045 steels} \label{fig:chap8:damage_growth_prenecked_center_diff_coefficients}
+\end{figure}
+
+Figure~(\ref{fig:chap8:equipstrain_vs_triaxiality_583_triaxiality_damage_583}) shows the
+triaxiality versus the equivalent plastic strain curves at the center for both the steels. Again the trends are similar to those
+observed in the case of cylindrical specimen. However, here, the triaxiality rises quickly for the model II also for the AISI1045 steel.
+\begin{figure}[htb]
+\centering \subfigure[AISI1090]{\includegraphics[width=.50\textheight]{Figures/chapter8/effect_of_extra_terms/prenecked_specimen/equipstrain_vs_triaxiality_583_1090_prenecked.eps}
+\label{fig:chap8:equipstrain_vs_triaxiality_583_1090_prenecked}} \\
+\subfigure[AISI1045]{\includegraphics[width=.50\textheight]{Figures/chapter8/effect_of_extra_terms/prenecked_specimen/equipstrain_vs_triaxiality_583_1045_prenecked.eps}
+ \label{fig:chap8:equipstrain_vs_triaxiality_583_1045_prenecked}}
+\caption{Comparison of triaxiality versus equivalent plastic strain curves for both the steels at the center of pre-notched specimen} \label{fig:chap8:equipstrain_vs_triaxiality_583_triaxiality_damage_583}
+\end{figure}
+
+\begin{figure}[htb]
+\centering \subfigure[AISI1090]{\includegraphics[width=.50\textheight]{Figures/chapter8/effect_of_extra_terms/prenecked_specimen/triaxiality_vs_damage_583_1090_prenecked.eps}
+\label{fig:chap8:triaxiality_vs_damage_583_1090_prenecked}} \\
+\subfigure[AISI1045]{\includegraphics[width=.50\textheight]{Figures/chapter8/effect_of_extra_terms/prenecked_specimen/triaxiality_vs_damage_583_1045_prenecked.eps}
+\label{fig:chap8:triaxiality_vs_damage_583_1045_prenecked}}
+\caption{Comparison of damage versus triaxiality curves for both the steels at the center of pre-notched specimen} \label{fig:chap8:triaxiality_damage_583}
+\end{figure}
+
+Figure~(\ref{fig:chap8:triaxiality_damage_583}) shows the growth
+of damage with triaxiality at the center for both the steels. For AISI1090 steel, the damage increases with triaxiality
+for all the three models. Therefore, the damage reaches the critical value for all the three models.
+ For AISI1045 steel, the damage rises even though the triaxiality drops for the model I. Except for the model III,
+ the damage reaches the critical value in all the cases.
+
+Figure~(\ref{fig:chap8:load_disp_plot_prenecked_diff_coefficients}) shows the load displacement plots for pre-notched specimens for both the steels. Here also, the necking is exhibited by all the three models. However, the sudden drop in the load is not exhibited by the models I and III.
+\begin{figure}[ht]
+\centering
+\subfigure[AISI1090]{\includegraphics[width=.50\textheight]{Figures/chapter8/effect_of_extra_terms/prenecked_specimen/Load_disp_node_plot_1090_diff_terms_prenecked.eps}
+\label{fig:chap8:load_disp_plot_prenecked_diff_coefficients_1090}} \\ %\\ \subfigtopskip \subfigbottomskip
+\subfigure[AISI1045]{\includegraphics[width=.50\textheight]{Figures/chapter8/effect_of_extra_terms/prenecked_specimen/Load_disp_node_plot_1045_diff_terms_prenecked.eps}
+ \label{fig:chap8:load_disp_plot_prenecked_diff_coefficients_1045}}
+\caption{Comparison of load displacement curves for AISI1090 and AISI1045 steels in pre-notched specimens}
+\label{fig:chap8:load_disp_plot_prenecked_diff_coefficients}
+\end{figure}
+
+%\subsection*{A.3 Conclusions} \label{chap9:conclusion_tensile_testing_effect_of_extra_terms}
+%Based on the study of this Appendix, the following conclusions can be made:
+%\begin{itemize}
+%\end{itemize} 

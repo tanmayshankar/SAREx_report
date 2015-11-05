@@ -1,0 +1,235 @@
+%\chapter{Semantic Relationships}
+
+\chapter{Decision Making}
+ 
+\section{Decision Making}
+In order for the robot to autonomously explore the environment without explicit human commands, it is critical for the robot to be able to navigate its surroundings on its own. There are two approaches that may be taken towards autonomous navigation of the robot. The first is to explicitly provide the robot with a goal location, and use classical planners from  path planning literature to drive the robot to that location. The second approach, while more complicated in formulation, makes use of stochastic decision making techniques to find optimal motions, or actions, for the robot.\\
+
+
+Stochastic approaches to planning or decision making are established to be more robust to uncertainty in the environment. Rather than providing a robot with a sequence of actions, or controls, they provide the robot with a policy. A policy is a description of what action to take in every possible state the robot may be in. Thus to achieve its objective of reaching a particular goal, the robot would take the action specified by the policy, estimate what state it is in, and repeat the procedure. \\
+% A policy is a mapping from the state space $S$ to the action space $A$, which suggests the optimal action to be executed for every state $s \in S$.\\
+
+By providing the robot with an idea of what action to execute in every possible scenario, rather than a deterministic set of actions to follow, the planning exercise is made considerably more robust. Such approaches are then only restricted by the uncertainty of the state estimation itself. Here, some well established frameworks for decision making are presented for subsequent use. 
+
+\section{Markov Decision Processes}
+A typical formulation in formal decision making theory is to utilize a Markov Decision Process (MDP). An MDP consists of: 
+\begin{enumerate}
+	\item State $s$ $\in$ State space $S$ - A description of the state the system is currently in. 
+	\item Action $a$ $\in$ Action space $A$ - The list of potential actions the system may take in its current state.
+	\item State Transition Matrix $T(s,a,s')$ - The probability of the state transitioning from $s$ to $s'$ upon taking action $a$. 
+	\item Reward Function $R(s,a,s')$ - A reward value associated with the state $s$ upon taking action $a$. 
+\end{enumerate}
+The fundamental premise of an MDP is that actions taken by an agent or a robot are stochastic - there is some probability with which action $a$ will cause a transition from state $s$ to $s'$. 
+
+A policy $\pi: S \rightarrow A $ may be defined as a mapping from state space $S$ to action space $A$. Thus $a=\pi(s)$ represents the action to be taken at state $s$ under policy $\pi$. The MDP also considers a time horizon $T$ over which an expected value of reward may be computed as: 
+\begin{equation}
+E[V^\pi] = \sum_{t=1}^{T} \gamma^t R(s,\pi(s))
+\end{equation}
+where $t$ is the index over time, $\gamma$ is a discount factor reduce the value of decisions far into the future. \\
+
+Thus we say a policy $\pi^*$ is optimal if there is no gain in expected reward by defecting from the action specified by $\pi^*$, for every possible state: 
+\begin{equation}
+R(s,\pi^*(s),s') \geq R(s,a,s') \;\;\;\; \forall a \in A \;\;\;\; \forall s \in S
+\end{equation}
+
+We assume the access to an MDP solver, such as SARSOP. 
+
+\section{Learning from demonstration}
+Learning from demonstration (LfD), or Imitation Learning, is a concept that makes use of demonstrations of a particular task to understand how the task is performed. When employed on a robot, it then allows the robot to `imitate' the demonstration, thus accomplishing complex tasks without explicit programming. Traditionally, LfD uses access to a demonstration by an expert user, as an ``expert policy" $\pi^E$, and attempts to create a policy $\pi^*$ that performs as well as the expert policy.
+
+\section{Inverse Reinforcement Learning}
+While the MDP decision making framework is suitable for an explicitly defined reward function, it may occur that the Reward function is unknown, or too complex to define. Similarly, the transition matrix may also be unknown, in cases where a model of the robot is difficult to create. In such cases, it is desirable that a robot learns this reward function on its own. Inverse Reinforcement Learning (IRL) provides us a well established framework for this purpose. LfD may be coupled with IRL  to estimate the reward function, by assuming that the expert user is maximizing the expected reward in taking actions. The LfD and IRL approaches are formally defined in section 5.1. 
+
+\section{Scene exploration}
+For semantic context based robot exploration, we define the problem as follows. The robot is provided with a map of the environment, as well as an estimate of the spatial likelihood of occurrences of various objects. The robot uses the semantic knowledge explained in sections 2-4, to understand the priority of searching for these objects, based on the ``action / concept" it believes is occurring in the scene. Its task is then to navigate this environment in an optimal manner, such that it maximizes the probability of finding these objects. It may be noted that the robot would ideally follow the priority order of locating the objects, and also avoid static obstacles present while navigating its environment. 
+
+\subsubsection{Formulation}
+In the context of robot exploration, we assume an environment to be a discrete rectangular grid world, consisting of of  $length_{env} \times breadth_{env}$ number of $1 \times 1$ grid `cells'. An ideal choice of state $s$ is the robot location $[x_{robot},y_{robot}]^T$ in its environment. Thus $x_{robot}$ and $y_{robot}$ correspond to the indices of the robot in the grid world. For simplicity, we assume the robot may fit inside one grid cell. Note here that the state space $S$ is thus the entire grid world.\\
+
+We consider a ground robot exploring this environment, which can move forward, backward, left or right. Our action space $A$ then becomes $\{forward,backward,left,right\}$. It follows all robot actions $a$ must then belong to $A$. \\
+
+%The state transition model is provided by 
+
+We would like to estimate a reward function $R(s,a,s')$, given $N_d$ number of demonstrations by a user, of navigating the robot in its environment. These demonstrations may be represented as an expert policy $\pi^E$.\\
+
+We recall the previously calculated set of value functions $V_i(s)$ from equation \#, which correspond to the likelihood of object $i$ occurring at location $s$. We additionally consider a set of costmaps $C_h(s) \;\;\; \forall h \in \{1,2,...H\}$ . These costmaps are retrieved from the 3D map of the environment created in section \#, and have a progressively higher value around obstacles, and have lower values in open spaces. This costmap provides us information of where the robot may physically move in the real world, without colliding with obstacles.\\ 
+
+We assume our user is trying to maximize a reward function with respect to these value functions as well as the costmaps. value functions and costmaps. We thus label these functions $V_i(s)$ and $C_h(s)$ as s set of basis functions $\bm{\phi}(s)$. This gives us a number of basis functions $N_b = N_{basis} = N_{value \; functions} + N_{costmaps}$. A  logical step is to approximate the reward function as a linear combination of these basis functions. 
+\begin{equation}
+R(s,a,s') = \sum_{k=1}^{N_{b}} \omega_k \phi_k(s)
+\end{equation}
+This may be concisely represented as: 
+%\begin{equation}
+%R(s) = \mathbf{\omega}^T \mathbf{\phi}(s)
+
+%\end{equation}
+\begin{equation}
+R(s) = \bm{\omega}^T \bm{\phi}(s)
+\end{equation}
+Where $\bm{\omega}$ is defined as: $$ \bm{\omega} = [ \omega_1, \omega_2, \dots, \omega_{N_b}]^T$$
+and $\bm{\phi}(s)$ is the collection of basis functions: $$\bm{\phi}(s) = [ V_1(s), V_2(s), \dots, V_{N_{value \; functions}}, C_1(s), C_2(s), \dots, C_{N_{costmaps}}]^T$$
+
+Our task then becomes to estimate the weights $\bm{\omega}$, and hence the reward function, given the expert policy.  
+%such that the expert policy.... %$\pi^E$ maximizes the expected reward. 
+Existing approaches such as ``Apprenticeship Learning via Inverse Reinforcement Learning", Abbeel and Ng, 2004 iteratively consider policies $\pi_k$, and maximize the difference of expected reward between the expert policy $\pi^E$ and the considered policy $\pi_k$.\\
+
+%While such max-margin approaches attempt to bound the sub-optimality of the generated policies, they are unable to handle an initial sub-optimal policy. \\
+
+Such approaches utilize the demonstrations provided by an expert user to estimate an unknown reward function. The majority of these techniques do so by maximizing the margin between the expected reward obtained by expert policy and the current robot policy. These approaches thus attempt to bound the sub-optimality of a robot policy, by iteratively updating the reward function till convergence. \\
+%A majority of the current approaches in apprenticeship learning utilize inverse reinforcement learning techniques. 
+
+It may be noted that this method is limited in the following capacity. 
+By iteratively solving an MDP with an updated estimate of the rewards, the authors do not provide a guarantee on whether the output policy provides a greater expected reward than the existing policies previously considered. For an initial sub-optimal policy, margin maximization between the expert and the current policy provides no new information, and solving the MDP with the resultant rewards is unnecessary. Furthermore, in order to evaluate the expected reward for the expert policy, access to the entire expert policy is assumed. In an actual setting of apprenticeship learning, we note that such access is not guaranteed; rather, the user provides an expert policy for a subset of the states present. \\
+
+In order to overcome these limitations, we present a method that leverages the fact that an expert user would try to maximize the expected reward at every step. We further postulate a tighter bound on such a reward; the expert $\pi^E$ maximizes the increase in reward at every time step. We also note that our approach is more intuitive to the reader, and also runs with significantly reduced time complexity, which we demonstrate in section 23232. \\
+
+The reader may note that a single demonstration consists of a series of ordered pairs ${<}s,a,s'{>}_q^t$. Here, $t$ is an index over time, till the horizon $T_q$ of demonstration $q$. A demonstration may alternately be considered as a train of these ordered pairs indexed over time. The algorithm we propose is as follows: 
+
+%\begin{enumerate}
+%	\item \begin{equation}
+%		  \forall \; i \in [1,2, \dots, N_d]:
+%		  \end{equation}
+%\end{enumerate}
+
+\begin{algorithm}
+	\caption{LfD-IRL for SAREx}
+	\begin{algorithmic}[1]
+		\Procedure{Learn reward weights}{}
+		%		\State $\textit{stringlen} \gets \text{length of }\textit{string}$
+%		\State $i \gets \textit{patlen}$
+		\State $\text{Initialize }\bm{\omega}^*$ 
+		\For {$q \in [1,2, \dots,N_d]$}:
+		\State $\bm{\omega} \leftarrow \bm{\omega}^*$
+		\State $\bm{\omega}^* \xleftarrow{\alpha} \arg\max_{\bm{\omega}} \sum_{t=1}^{T_q} \gamma^t \; ( R(_q^ts') - R(_q^ts) ) $
+		\State $\alpha \leftarrow 0.9 \alpha$
+		\EndFor
+		\State \Return $\; \bm{\omega}^*$
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+%\begin{equation}
+%\forall \; i \in [1,N_d]:
+%\end{equation}
+
+
+Our objective then becomes to solve: 
+\begin{equation}
+\arg\max_{\bm{\omega}} \sum_{t=1}^{T_q} \gamma^t \; [ R(_q^ts') - R(_q^ts) ]
+\end{equation}
+
+%\begin{equation}
+%\bm{\omega}^* = \arg\max_{\bm{\omega}} \sum_{t=1}^{T_i} \gamma^t \; [ R(_i^ts') - R(_i^ts) ]
+%\end{equation}
+
+We also recall $R(s) = \bm{\omega}^T . \bm{\phi}(s)$, this may be represented as: 
+\begin{equation}
+\arg\max_{\bm{\omega}} \sum_{t=1}^{T_q} \gamma^t \; [ \bm{\omega}^T.\bm{\phi}(_q^ts') - \bm{\omega}^T.\bm{\phi}(_q^ts) ]
+\end{equation}
+
+%\begin{equation}
+%\bm{\omega}^* = \arg\max_{\bm{\omega}} \sum_{t=1}^{T_i} \gamma^t \; [ \bm{\omega}^T.\bm{\phi}(_i^ts') - \bm{\omega}^T.\bm{\phi}(_i^ts) ]
+%\end{equation}
+
+Noticing that $\bm{\omega}$ is independent of the time index, we have: 
+\begin{equation}
+\arg\max_{\bm{\omega}} \; \bm{\omega}^T. \sum_{t=1}^{T_q} \gamma^t \; [ \bm{\phi}(_q^ts') - \bm{\phi}(_q^ts) ]
+\end{equation}
+
+%In order to solve this $\arg\max$ problem efficiently, we notice the following properties 
+In order for the problem to lead to a consistent solution that may subsequently used by the robot to navigate its environment, we note the following trivial corner case. If the basis functions are defined to be non-negative over the state-space domain, the specified $\arg\max$ problem would simply individually maximize each component of the weights, $\omega_j$. 
+
+To avoid this pitfall, we map each of the basis functions from their respective ranges, to a common range of $[-R_{min},1]$, where $R_{min}$ is an $\epsilon$ small penalty received over the entire space, i.e. $R_{min} \in [0,\epsilon]$. By enforcing the additional constraints $\omega_k \in [0,1] \; \forall
+k \in [1,2,\dots,N_b]$, and subsequently $\| \bm{\omega} \|_1 =1$, we direct the $\arg\max$ problem to then choose a vector $\bm{\omega}$ such that the expected increase in reward at each step of the process is maximized. This formulation also restricts the generated reward function to a similar range of $[-R_{min},1]$.
+
+For clarity, we concisely state the problem as follows:
+
+Objective function: $$\max_{\bm{\omega}} \bm{\omega}^T. \sum_{t=1}^{T_q} \gamma^t \; [ \bm{\phi}(_q^ts') - \bm{\phi}(_q^ts) ]$$\\
+Decision Variables: $$ \bm{\omega} = [ \omega_1, \omega_2, \dots, \omega_{N_b}]^T$$
+Constraints considered: $$\|\bm{\omega}\|_1=1$$
+$$\omega_k \in [0,1] \; \forall k \in [1,2,\dots,N_b]$$
+$$R(s|\bm{\omega}) \in [-R_{min},1] \; \forall s \in S$$
+
+We propose algorithm 1 as an iterative process to solve for $\bm{\omega}$, using finite difference methods to approximate the gradient of the weighted sums of the basis functions, and subsequently applying gradient based searches over the space of $\bm{\omega}$.
+
+\subsubsection{Evaluating weights of the reward function}
+In this section we present the stochastic gradient based search used for estimating the weights of the reward function. 
+
+Our iterative algorithm considers each demonstration sequentially, and estimates the set of weights $\bm{\omega}$ that maximize the expected increase in reward for a given time step as: 
+$$\max_{\bm{\omega}} \bm{\omega}^T. \sum_{t=1}^{T_q} \gamma^t \; [ \bm{\phi}(_q^ts') - \bm{\phi}(_q^ts) ]$$
+
+We first initialize the $\bm{\omega}$ to $\bm{\omega}^{(0)}$, such that $\omega_j^{(0)} = 1/{N_b} \; \forall j \in [1,N_b]$. 
+
+%We then evaluate the expected reward 
+We update the $\omega_j$ values as: 
+\begin{equation}
+\omega_j = \omega_j - \alpha {{\partial U_i}\over{\partial \omega_j}}
+\end{equation}
+
+Represented as a vector equation: 
+\begin{equation}
+\bm{\omega} = \bm{\omega} - \alpha \nabla U_i
+\end{equation}
+
+
+\section{Introduction}
+
+\section{Related Work}
+\noindent
+Semantic Understanding\\
+
+\noindent
+Recent advancements in computer vision and machine learning literature have facilitated the development of semantic understanding techniques. [9]. Such techniques have also been applied in conjunction with a variety of robotic concepts, including SLAM [7], 
+
+\noindent
+Apprenticeship Learning \& Reinforcement Learning\\
+
+\noindent
+Recent work in apprenticeship learning [1], [2] and [3] is closely tied to inverse reinforcement learning []. Such approaches utilize the demonstrations provided by an expert user to estimate an unknown reward function. The majority of these techniques do so by maximizing the margin between the expected reward obtained by expert policy and the current robot policy. These approaches thus attempt to bound the sub-optimality of a robot policy, by iteratively updating the reward function till convergence. \\
+%A majority of the current approaches in apprenticeship learning utilize inverse reinforcement learning techniques. 
+
+It may be noted that this method is limited in the following capacity. 
+By iteratively solving an MDP with an updated estimate of the rewards, the authors do not provide a guarantee on whether the output policy provides a greater expected reward than the existing policies previously considered. For an initial sub-optimal policy, margin maximization between the expert and the current policy provides no new information, and solving the MDP with the resultant rewards is unnecessary. Furthermore, in order to evaluate the expected reward for the expert policy, access to the entire expert policy is assumed. In an actual setting of apprenticeship learning, we note that such access is not guaranteed; rather, the user provides an expert policy for a subset of the states present. \\
+
+
+
+
+
+
+\section{Section-1 Name}
+\begin{definition}\label{abc3}
+Some definition....
+\end{definition}
+
+\begin{remark}
+Some remark.......
+\end{remark}
+
+
+
+\begin{theorem}
+Some theorem.......
+\end{theorem}
+
+\begin{proof}
+Proof is as follows....
+\end{proof}
+
+\section{Section-2 Name}
+\begin{definition}\label{abc4}
+Some definition....
+\end{definition}
+
+\begin{remark}
+Some remark.......
+\end{remark}
+
+\subsection{Subsection name}
+
+\begin{theorem}
+Some theorem.......
+\end{theorem}
+
+\begin{proof}
+Proof is as follows....
+\end{proof}

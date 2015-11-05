@@ -1,0 +1,215 @@
+\chapter{Semantic Relationships}
+
+
+
+\section{Semantic Relationships}
+\paragraph{}
+
+For constructing a semantic understanding of a scene, we consider spatial relationships between objects, as well as object-affordance relationships. Spatial relationships exist between pairs of objects present in the scene. We analyse the relative spatial positions of objects that occur together in a scene. If these objects occur with proximity to each other in a particular scene, we claim they are spatially related, and tag this scene with a spatial relationship of these objects. 
+We also make use of object-affordance relationships. An affordance typically refer to a quality of an object that enables it to perform a certain action, or to be used for performing a certain action. Throughout this paper, we disregard the temporal domain of actions, and hence utilize the term \textit{concepts} to refer to these actions. Thus we first understand the knowledge of what concepts the object in question may be used for. By identifying objects with common affordances, we are then able to understand what additional objects may be required to execute a given concept, and thus enable the robot to search for such objects. 
+
+\section{Notation}
+Throughout this document, we make use of the following notation. We consider $m$ number of objects, and $n$ number of potential affordances, and $s$ number of scenes for training our system. \\
+\hspace*{10pt} $x_i$ \textit{refers to object} $i$\textit{, varying from} $1:m$\\
+\hspace*{10pt} $y_j$ \textit{refers to affordance} $j$\textit{, varying from} $1:n$\\
+\hspace*{10pt} $k$ \textit{refers to the index over scenes used for training}\\
+\hspace*{10pt} $p(x_i)$ \textit{refers to the probability of object} $i$ \textit{occuring in the scene}\\
+\hspace*{10pt} $p(y_j)$ \textit{refers to the probability of affordance} $j$ \textit{occuring in the scene}
+
+\section{Spatial object relationships}
+The spatial object relationships may be quantified by the distance between a particular pair of objects. Other qualitative relationships include relative location, such as front, back, etc. However, such features are not robust to changes in camera view point. Traditionally, relative distances between objects is not scale invariant, and depends on the distance of the camera from the objects. In may be noted, however, that we make use of the Kinect as a 3D depth sensor, thus providing us with access to absolute pose information of the objects. This permits us to use the relative distance, or radius feature between two objects. The feature is clearly robust to changes in camera position as well as scale changes. The problem of spatial object relationships is thus split into two sub-components that of learning and querying. Thus we first learn the spatial relationships of all possible object pairs over each of the $s$ training scenes, and subsequently generate a corresponding predictive model. 
+
+\subsection{Learning spatial relationships}
+In order to learn the spatial relationships, we first parse the scenes present. Thus for each scene $k$, over each pair of objects $i$ and $j$, we have:
+%$$r_{ij}^{k} = \| \mathbf{x_i}^k - \mathbf{x_j}^k \| _2 \forall k \in 1:s $$
+%$\forall$ $k$ $\in$
+\begin{equation}
+r_{ij}^{k} = \| \mathbf{x_i}^k - \mathbf{x_j}^k \| _2 
+\end{equation}
+
+
+And we generate the predictive model for spatial relationships as $r_{ij}^*$ : 
+\begin{equation}
+r_{ij} = \arg\min_{r^*} \sum_{k=1}^s \| r^* - r_{ij}^{k}  \| _2
+\end{equation}
+
+%$$ r_{ij}^* = \arg\min_{r^*} \sum_{k=1}^s ( r^* - r_{ij}^{k}  ) $$ for each i and j
+
+We may exploit the single dimensional nature of the radius feature, to reduce the $\arg\min_{r^*}$ problem to a simple computation of the mean of all such $r_{ij}^k$:
+\begin{equation}
+r_{ij}^* = {1\over{s}} \sum_{k=1}^s r_{ij}^k 
+\end{equation}
+We also compute the standard deviation about the mean for each of the object pairs. 
+\begin{equation}
+\sigma_{ij}^* = \sqrt{{1 \over s} \sum_{k=1}^s (r_{ij}^k - r_{ij}^*)^2}
+\end{equation}
+
+\subsection{Querying spatial relationships}
+Given an estimate of the 3D pose of all objects detected in the scene, we then proceed to calculate the potential location of a particular object. 
+
+To compute this efficiently, we make use of a sampling based approach. We discretize the current field of view of the Kinect into a fixed number of 2D grid points. This discretization helps reduce the number of points we must consider to the order of the grid size, instead of the original input point-cloud. 
+
+In order to account for the uncertainty in position of the object we are looking to find, we use a value function based approach in the form of a truncated Gaussian distribution. Thus for a given pair of objects, we define a value function based on the distance between these objects, and make the assertion that a higher function value at a certain radius corresponds to a higher likelihood of the object occurring at that particular radius away from the alternate object. Such a distribution may be defined as: 
+%\begin{equation}
+%G(r,\mu_{ij},\sigma_{ij},a,b) = {{{1\over \sigma_{ij}} \phi ( {{r-\mu_{ij}}\over{\sigma_{ij}}})}\over{\Phi ( %{{b-\mu_{ij}}\over{\sigma_{ij}}}) - \Phi ( {{a-\mu_{ij}}\over{\sigma_{ij}}})}}
+%\end{equation}
+
+$$G(r,\mu_{ij},\sigma_{ij},a,b) = {{{1\over \sigma_{ij}} \phi ( {{r-\mu_{ij}}\over{\sigma_{ij}}})}\over{\Phi ( {{b-\mu_{ij}}\over{\sigma_{ij}}}) - \Phi ( {{a-\mu_{ij}}\over{\sigma_{ij}}})}}$$
+
+where $\phi(r)$ is the probability density function, and $\Phi(r)$ represents the cummulative distribution function. Here, the limits $a$ and $b$ are the points of truncation for our distribution. We have $a=0$ and $b \rightarrow \infty$, thus under these conditions, we have $\Phi({{b-\mu}\over{\sigma}}) \rightarrow 1$. 
+
+It may also be noted that since the radius is independent of the relative direction in which the objects occur, using one pair of objects is not sufficient to estimate a unique location where the object is likely to occur. 
+
+The framework we use thus considers multiple pairs of objects, to assign a value to a particular sampled point. This value corresponds to the likelihood of the desired object occurring at that sampled point. For completeness, we consider \textit{all} such object pairs, noting that the contribution of objects that are very far away is diminished by the Gaussian trait of the value function. The value of a given sample point, to find object $i$ is then computed as: 
+\begin{equation}
+V(\mathbf{r}_{sample})= \sum_{j=1}^m G((\mathbf{r}_{sample}-\mathbf{r_j}),\mu_{ij},\sigma_{ij}) p(\mathbf{x_i})
+\end{equation}
+
+
+Where $p(\mathbf{x_i})$ is the belief that object $i$ occurs at location $\mathbf{x_i}$, provided to us as a confidence estimate by our detector. The sample point chosen to be our best estimate of the current position of the desired object may thus be defined as: 
+\begin{equation}
+\mathbf{z}_{obj}^*= \arg\max_{\mathbf{r} \in S} V(\mathbf{r}_{sample})
+\end{equation}
+
+% \arg\max_{\mathbf{r} \in S} \sum_{j=1}^m G((\mathbf{r}_{sample}-\mathbf{r_j}),\mu_{ij},\sigma_{ij})$$ 
+
+%$$\mathbf{z}_{obj}^*= \arg\max_{\mathbf{r} \in S} V(\mathbf{r}_{sample})= \arg\max_{\mathbf{r} \in S} \sum_{j=1}^m G((\mathbf{r}_{sample}-\mathbf{r_j}),\mu_{ij},\sigma_{ij})$$ 
+
+Where the $\arg\max$ is taken over all such points belonging to the discretized sample space. 
+
+\section{Object Affordance relationships}
+The second type of object property we are interested in understanding is that of object affordances. An affordance is typically considered as a relationship between the object and its surrounding environment, that permits the object to perform an action, or to be used to perform an action. We consider common day to day executable concepts such as eating, writing, reading, as potential affordances that an object may have. 
+
+Human beings have an implicit understanding of what concepts may occur in a scene based on the objects present. To enable a robot the same capabilities, we leverage information of scenes labelled with concepts that potentially occur in the scene. We then note which objects occur in this scene, and then draw up a correlation between these objects and concepts for each scene. We split the object affordance relationships problem into two components, learning and querying.
+
+\subsection{Learning object affordance relationships}
+In the learning phase, we would like to first estimate the probability of a concept occurring in the scene given the confidence of our object detector in detecting some subset of objects present in the scene. In order to do this, we must create a transformation that takes us from the object space to the concept space, i.e., it operates on a vector of object detection confidences, and outputs a vector of confidences of each of the concepts. We consider a set of scenes $k = 1:s$, each labelled with:\\
+$x_i^k$ - Whether object $i$ occurs in scene $k$, over all $i$ and $k$.\\
+$y_j^k$ - Whether concept $j$ occurs in scene $k$, over all $j$ and $k$.\\
+ 
+We define a set of coefficients $w_{ji}^*$, which correspond to whether object $i$ is required to execute concept $j$. 
+For convenience, we also define an m x n matrix $M = [w_{ji}^*]$. We first compute a series of such coefficients $w_{ji}^k$ and a corresponding matrix $M_k$ for each scene $k$ in the training dataset. We wish to learn the predictive affordance model, $w_{ji}^*$, from $w_{ji}^k$. 
+
+$w_{ji}^k$ thus takes on a non zero value when object $i$ is required for concept $j$, and is $0$ otherwise. Here, $w_{ji}^*$ and $w_{ji}^k$ alike are both normalized for each $j$, i.e. 
+\begin{equation}
+\sum_{i=1}^m w_{ji}^k = \sum_{i=1}^m w_{ji}^* = 1
+\end{equation}
+%Thus for each scene $k$, $$y_j^k = \sum_{i=1}^m w_{ji}^k x_i^k$$ and $$\sum_{j=1}^n y_j^k = 1$$
+Note here that while $w_{ji}^k$ may appear analogous to $p(y_j^k | x_i^k)$, $w_{ji}^k$ is to be treated as a transform from the object space to the affordance space rather than a series of conditional probability expressions. Thus for each scene $k$, we have:
+\begin{equation}
+\overline{y_j}^k = \sum_{i=1}^m w_{ji}^k x_i^k
+\end{equation}
+
+and 
+\begin{equation}
+y_j^k = {{\overline{y_j}^k} \over {\sum_{j=1}^n \overline{y_j}^k}} 
+\end{equation}
+%To simplify learning the $w_{ji}^*$ from the labelled data set, 
+
+In order to learn $w_{ji}^*$, we find an optimal set of weights $w_{ji}$ such that our predictive model of concepts occurring in the scene, $\sum_{i=1}^m w_{ji}^* x_i^k$ is as close to the labelled set of concepts $y_j^k$ as possible. However, for a given scene $k$, it is impossible to learn the $n\times m$ elements from just the single constraint $y_j^k=\sum_{i=1}^m w_{ji}^k x_i^k$. To simplify the problem, we consider one concept at a time. By trying to solve for a consistent $w_{ji}^k$ for a fixed concept $j$ over all scenes $k$, the problem may be rearranged to find an efficient solution method. We first define $\mathbf{w_j}^*$, $\mathbf{x}^k$, $\mathbf{y_j}$ and $X$ as - 
+%\begin{equation}
+$$\mathbf{w_j}^*=[w_{j1}^*, w_{j2}^*, \dots w_{ji}^*, \dots w_{jm}^*]$$
+%\end{equation}
+%\begin{equation}
+$$\mathbf{x}^k=[x_1^k, x_2^k, \dots x_i^k, \dots x_m^k]$$
+%\end{equation}
+%\begin{equation}
+$$\mathbf{y_j}=[y_j^k, y_j^2, \dots y_j^k, \dots y_j^s]$$
+%\end{equation}
+%\begin{equation}
+$$X=[x_i^k]_{s \times m}$$
+%\end{equation}
+
+%\begin{equation}
+%\mathbf{w_j}^*=[w_{j1}^*, w_{j2}^*, \dots w_{ji}^*, \dots w_{jm}^*]
+%\end{equation}
+%\begin{equation}
+%\mathbf{x}^k=[x_1^k, x_2^k, \dots x_i^k, \dots x_m^k]
+%\end{equation}
+%\begin{equation}
+%\mathbf{y_j}=[y_j^k, y_j^2, \dots y_j^k, \dots y_j^s]
+%\end{equation}
+%\begin{equation}
+%X=[x_i^k]_{s \times m}
+%\end{equation}
+
+
+We thus have an overdetermined system of linear equations, under the assumption our dataset is sufficiently large. For each such concept $j$,
+\begin{equation}
+\mathbf{y_j}={\mathbf{w_j}^*}^T.\mathbf{x}^k
+\end{equation}
+Thus the desired $w_{ji}^*$, or $\mathbf{w_j}^*$ for all such concepts $j$, may be defined by a linear least squares problem- 
+\begin{equation}
+\mathbf{w_{j}}^* = \arg\min_{\mathbf{w_{j}}^*} \sum_{k=1}^s \| y_j^k - {\mathbf{w_{j}}^*}^T .  \mathbf{x}^k \|_2
+\end{equation}
+This may be solved using the Moore Penrose Pseudoinverse. 
+\begin{equation}
+(X^T X) .\mathbf{w_j}^* = X^T .\mathbf{y_j}
+\end{equation}
+\begin{equation}
+\mathbf{w_j}^* = (X^T X)^{-1} X^T .\mathbf{y_j}
+\end{equation}
+\begin{equation}
+\mathbf{w_j}^* = X^+ y_j
+\end{equation}
+
+This gives us an efficient method of learning the $w_{ji}^*$ values from a dataset of labelled scenes. For convenience, we define an Object-Affordance matrix $M$, equivalent to the transformation provided by $w_{ji}^*$.
+$$M=[w_{ji}^*]_{n \times m}$$
+
+\subsection{Querying object affordance relationships}
+Once we have learnt the object affordance relationships from the labelled dataset, we must create a system to determine what objects and concepts occur in a new scene. We derive from the literature to determine what objects occur in the scene, making use of a 3D semantic scene labelling provided by Kopulla et. al. Such an object detector provides us with a confidence of a particular object occurring in a scene, $p(x_i)$, for each such object $i$. Our first task is thus to retrieve the probability with which a certain activity occurs in the scene, $p(y_j)$, for all concepts $j$. Thus given $\mathbf{x}$, we would like to estimate $\mathbf{y}$, where:
+$$ \mathbf{x} = [p(x_1),p(x_2),\dots p(x_m)]^T$$
+$$ \mathbf{y} = [p(y_1),p(y_2),\dots p(y_n)]^T$$
+This may be easily computed using the Object-Affordance matrix $M$. 
+\begin{equation}
+[p(y_j)]_{n \times 1} = M_{n \times m} [p(x_i)]_{m \times 1} = [w_{ji}^*]_{n \times m} [p(x_i)]_{m \times 1}
+\end{equation}
+%$$[p(y_j)]_{n \times 1} = M_{n \times m} [p(x_i)]_{m \times 1} = [w_{ji}^*]_{n \times m} [p(x_i)]_{m \times 1}$$
+Which may be simply written as
+%$$\mathbf{y}=M \mathbf{x}$$
+\begin{equation}
+\mathbf{y}=M \mathbf{x}
+\end{equation}
+Equation 16 is notably powerful - it simplifies a portion of our semantic model into one cohesive equation. Obtaining the probabilities of each activity occurring, defines half of the semantic understanding - we now understand what concepts are likely occurring in the scene, and with what likelihood they are present. The second phase of our understanding requires us to determine which objects are required to execute the most likely concepts in the scene, introducing the notion of correlated objects. 
+
+A simple example is if the scene contains a plate, a fork, and a knife, the robot identifies one potential activity that could occur is eating.  The robot now ideally understands, from what it has learnt, that a spoon is also required to perform the activity. 
+
+Traditional approaches typically follow a Maximum-a-posteriori estimation for such a problem. This involves choosing a single most likely action that is occurring in the scene, disregarding other possibilities that may be only slightly less likely. 
+
+In order to develop a more robust approach, we consider that multiple concepts may be occurring in the scene, and proceed with identifying objects required to execute this \textit{set} of concepts, rather than a single activity. In order to retrieve these objects that are required, we must return from the activity space $y$ to the object space $x$. Specifically, given the vector of probabilities of concepts $\mathbf{y}$, we need a transformation that provides us with a set of objects that is required for these concepts, $\mathbf{x}$. We observe that the terms of the object affordance matrix $M$, i.e. $w_{ji}^*$ express the correlation of activity $j$ with object $i$. Utilizing the commutativity of such correlation, the transpose of this matrix, $M^T$, is observed to be the desired transform from the action space to the object space. Thus our set of correlated objects, $\mathbf{x}^*$, may be computed as 
+
+\begin{equation}
+\mathbf{x}^*=M^T \mathbf{y}
+\end{equation}
+%$$\mathbf{x}^*=M^T \mathbf{y}$$
+
+Equation 17, the `inverse' counterpart of equation 16, is equally powerful. It permits us to calculate the set of objects required to perform a set of concepts which are likely occurring in the scene. We note with emphasis that we may already have a high confidence of detection of a subset of these objects, represented in the original object vector $\mathbf{x}$. In a meaningful setting, we would like a robot to smartly overlook objects in which we have a high confidence of detection. An assistive robot would thus search only for those objects which are not already present, or obvious. To identify such objects, we subtract the initial object confidences, $\mathbf{x}$ from our set of correlated objects, $\mathbf{x}^*$, and assign these ``neediness" values to $z$. 
+\begin{equation}
+\mathbf{\mathbf{x}}=\mathbf{x}^* - \mathbf{x}
+\end{equation}
+%$$\mathbf{\mathbf{x}}=\mathbf{x}^* - \mathbf{x}$$
+\begin{equation}
+\mathbf{z}=\mathbf{x}^* - \mathbf{x}
+\end{equation}
+%$$\mathbf{z}=\mathbf{x}^* - \mathbf{x}$$
+This may be equivalently expressed as
+\begin{equation}
+\mathbf{z}=M^T \mathbf{y} - \mathbf{x}
+\end{equation}
+%$$\mathbf{z}=M^T \mathbf{y} - \mathbf{x}$$ 
+\begin{equation}
+\mathbf{z}=M^TM\mathbf{x}-\mathbf{x}
+\end{equation}
+%$$\mathbf{z}=M^TM\mathbf{x}-\mathbf{x}$$
+\begin{equation}
+\mathbf{z}=\{M^TM - I\}\mathbf{x}
+\end{equation}
+%$$\mathbf{z}=\{M^TM - I\}\mathbf{x}$$
+
+In order to determine an order in which we ought to search for these objects, we simply rank the object in decreasing order of values of their ``neediness" for all $q = 1:z$:
+\begin{equation}
+\mathbf{z}^* = rank_q z_q
+\end{equation}
+%$$\mathbf{z}^* = rank_q z_q$$
+ 
+ 

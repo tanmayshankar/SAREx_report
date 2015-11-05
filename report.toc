@@ -1,0 +1,27 @@
+\contentsline {chapter}{List of Figures}{vi}
+\contentsline {chapter}{List of Tables}{vii}
+\contentsline {chapter}{\numberline {1}Introduction}{1}
+\contentsline {chapter}{\numberline {2}Literature Review}{2}
+\contentsline {chapter}{\numberline {3}Semantic Relationships}{5}
+\contentsline {section}{\numberline {3.1}Semantic Relationships}{5}
+\contentsline {paragraph}{}{5}
+\contentsline {section}{\numberline {3.2}Notation}{6}
+\contentsline {section}{\numberline {3.3}Spatial object relationships}{6}
+\contentsline {subsection}{\numberline {3.3.1}Learning spatial relationships}{7}
+\contentsline {subsection}{\numberline {3.3.2}Querying spatial relationships}{7}
+\contentsline {section}{\numberline {3.4}Object Affordance relationships}{9}
+\contentsline {subsection}{\numberline {3.4.1}Learning object affordance relationships}{9}
+\contentsline {subsection}{\numberline {3.4.2}Querying object affordance relationships}{12}
+\contentsline {chapter}{\numberline {4}Decision Making}{16}
+\contentsline {section}{\numberline {4.1}Decision Making}{16}
+\contentsline {section}{\numberline {4.2}Markov Decision Processes}{17}
+\contentsline {section}{\numberline {4.3}Learning from demonstration}{18}
+\contentsline {section}{\numberline {4.4}Inverse Reinforcement Learning}{19}
+\contentsline {section}{\numberline {4.5}Scene exploration}{19}
+\contentsline {subsubsection}{Formulation}{19}
+\contentsline {subsubsection}{Evaluating weights of the reward function}{24}
+\contentsline {section}{\numberline {4.6}Introduction}{25}
+\contentsline {section}{\numberline {4.7}Related Work}{25}
+\contentsline {section}{\numberline {4.8}Section-1 Name}{26}
+\contentsline {section}{\numberline {4.9}Section-2 Name}{26}
+\contentsline {subsection}{\numberline {4.9.1}Subsection name}{27}
